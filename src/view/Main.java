@@ -58,6 +58,7 @@ public class Main extends Application {
     MenuItem openFile;
     MenuItem compileFile;
     MenuItem printFile;
+    MenuItem printFileSurroundings;
     MenuItem endSimulation;
     MenuItem saveXML;
     MenuItem saveJAXB;
@@ -109,16 +110,28 @@ public class Main extends Application {
     public void initializeEditorMenu() {
         editorMenu = new Menu("_Editor");
         newFile = new MenuItem("Neu");
+        ImageView editorNewImageView = new ImageView("resources/file.png");
+        editorNewImageView.setFitHeight(15);
+        editorNewImageView.setFitWidth(15);
+        newFile.setGraphic(editorNewImageView);
         newFile.setAccelerator(KeyCombination.keyCombination("SHORTCUT+N"));
 
         openFile = new MenuItem("Öffnen");
         openFile.setAccelerator(KeyCombination.keyCombination("SHORTCUT+O"));
+        ImageView editorOpenFile = new ImageView("resources/folder.png");
+        editorOpenFile.setFitWidth(15);
+        editorOpenFile.setFitHeight(15);
+        openFile.setGraphic(editorOpenFile);
 
         compileFile = new MenuItem("Kompilieren");
         compileFile.setAccelerator(KeyCombination.keyCombination("SHORTCUT+K"));
 
         printFile = new MenuItem("Drucken");
         printFile.setAccelerator(KeyCombination.keyCombination("SHORTCUT+P"));
+        ImageView editorPrintFile = new ImageView("resources/print.png");
+        editorPrintFile.setFitHeight(15);
+        editorPrintFile.setFitWidth(15);
+        printFile.setGraphic(editorPrintFile);
 
         endSimulation = new MenuItem("Beenden");
         endSimulation.setAccelerator(KeyCombination.keyCombination("SHORTCUT+Q"));
@@ -127,7 +140,7 @@ public class Main extends Application {
     }
 
     public void initializeSurroundingsMenu() {
-        surroundingsMenu = new Menu("Umgebung");
+        surroundingsMenu = new Menu("_Umgebung");
         surroundingsMenuSave = new Menu("Speichern");
         saveXML = new MenuItem("XML");
         saveJAXB = new MenuItem("JAXB");
@@ -145,6 +158,7 @@ public class Main extends Application {
         saveAsPNG = new MenuItem("PNG");
         surroundingsMenuSavePicture.getItems().addAll(saveAsJPG, saveAsPNG);
 
+        printFileSurroundings = new MenuItem("Drucken");
         changeSize = new MenuItem("Grösse ändern...");
 
         menu = new ToggleGroup();
@@ -158,12 +172,12 @@ public class Main extends Application {
         placeBoat.setToggleGroup(menu);
         deleteField.setToggleGroup(menu);
 
-        surroundingsMenu.getItems().addAll(surroundingsMenuSave, surroundingsMenuLoad, surroundingsMenuSavePicture, printFile,
+        surroundingsMenu.getItems().addAll(surroundingsMenuSave, surroundingsMenuLoad, surroundingsMenuSavePicture, printFileSurroundings,
                 changeSize,new SeparatorMenuItem(), placeWhale, placeFish, placeBoat, deleteField);
     }
 
     public void initializeWhaleMenu() {
-        whaleMenu = new Menu("Wal");
+        whaleMenu = new Menu("_Wal");
         countFishes = new MenuItem("Fische im Maul...");
         turnLeft = new MenuItem("linksUm");
         turnLeft.setAccelerator(KeyCombination.keyCombination("SHORTCUT+SHIFT+L"));
@@ -178,12 +192,27 @@ public class Main extends Application {
     }
 
     public void initializeSimulationsMenu() {
-        simulationsMenu = new Menu("Simulation");
+        simulationsMenu = new Menu("_Simulation");
         startContinue = new MenuItem("Start/Fortsetzen");
         startContinue.setAccelerator(KeyCombination.keyCombination("SHORTCUT+F11"));
+        ImageView simulationStartContinue = new ImageView("resources/play_button.png");
+        simulationStartContinue.setFitWidth(15);
+        simulationStartContinue.setFitHeight(15);
+        startContinue.setGraphic(simulationStartContinue);
+
         pause = new MenuItem("Pause");
+        ImageView simulationPause = new ImageView("resources/pause.png");
+        simulationPause.setFitHeight(15);
+        simulationPause.setFitWidth(15);
+        pause.setGraphic(simulationPause);
+
         stop = new MenuItem("Stop");
         stop.setAccelerator(KeyCombination.keyCombination("SHORTCUT+F12"));
+        ImageView simulationStop = new ImageView("resources/stop.png");
+        simulationStop.setFitWidth(15);
+        simulationStop.setFitHeight(15);
+        stop.setGraphic(simulationStop);
+
         simulationsMenu.getItems().addAll(startContinue, pause, stop);
     }
 
@@ -254,7 +283,7 @@ public class Main extends Application {
     //
 
     public void createImageViews() {
-        ImageView newFileButtonImageView = new ImageView("/resources/new_file.png");
+        ImageView newFileButtonImageView = new ImageView("/resources/file.png");
         /*newFileButtonImageView.setFitHeight(15);
         newFileButtonImageView.setFitWidth(15);*/
         newFileButton.setGraphic(newFileButtonImageView);
@@ -274,59 +303,52 @@ public class Main extends Application {
         compileButtonImageView.setFitHeight(15);*/
         compileButton.setGraphic(compileButtonImageView);
 
-        ImageView fieldButtonImageView = new ImageView("/resources/terrain.gif");
+        ImageView fieldButtonImageView = new ImageView("/resources/water.png");
         /*fieldButtonImageView.setFitHeight(15);
         fileButtonImageView.setFitWidth(15);*/
         fieldButton.setGraphic(fieldButtonImageView);
 
-        ImageView whaleButtonImageView = new ImageView("resources/orca.png");
+        ImageView whaleButtonImageView = new ImageView("resources/whale32.png");
         /*whaleButtonImageView.setFitWidth(15);
         whaleButtonImageView.setFitHeight(15);*/
         whaleButton.setGraphic(whaleButtonImageView);
 
-        //TODO: Ändern des Fisch-Bildes zu einem richtigen Fisch
-        ImageView fishButtonImageView = new ImageView("resources/fish.gif");
+        ImageView fishButtonImageView = new ImageView("resources/fish32.png");
         /*fishButtonImageView.setFitHeight(15);
         fishButtonImageView.setFitWidth(15);*/
         fishButton.setGraphic(fishButtonImageView);
 
-        //TODO: Ändern des Boot-Bildes zu einem richtigen Boot
-        ImageView boatButtonImageView = new ImageView("resources/boat.gif");
+        ImageView boatButtonImageView = new ImageView("resources/ship.png");
         /*boatButtonImageView.setFitWidth(15);
         boatButtonImageView.setFitHeight(15);*/
         boatButton.setGraphic(boatButtonImageView);
 
-        ImageView removeButtonImageView = new ImageView("resources/cancel_x.png");
+        ImageView removeButtonImageView = new ImageView("resources/cancel.png");
         /*removeButtonImageView.setFitHeight(15);
         removeButtonImageView.setFitWidth(15);*/
         removeButton.setGraphic(removeButtonImageView);
 
-        //TODO: Ändern des Bildes zu einem richtigen Orca
-        ImageView countFishButton = new ImageView("resources/orcafish.png");
+        ImageView countFishButton = new ImageView("resources/whalefish.png");
         /*countFishButton.setFitWidth(15);
         countFishButton.setFitHeight(15);*/
         this.countFishButton.setGraphic(countFishButton);
 
-        //TODO: Ändern des Bildes zu einem richtigen Orca
-        ImageView turnButtonImageView = new ImageView("resources/orcaleft.png");
+        ImageView turnButtonImageView = new ImageView("resources/whaleturn.png");
         /*turnButtonImageView.setFitHeight(15);
         turnButtonImageView.setFitWidth(15);*/
         turnButton.setGraphic(turnButtonImageView);
 
-        //TODO: Ändern des Bildes zu einem richtigen Orca
-        ImageView moveButtonImageView = new ImageView("resources/orcamove.png");
+        ImageView moveButtonImageView = new ImageView("resources/whalemove.png");
         /*moveButtonImageView.setFitWidth(15);
         moveButtonImageView.setFitHeight(15);*/
         moveButton.setGraphic(moveButtonImageView);
 
-        //TODO: Ändern des Bildes zu einem richtigen Orca
-        ImageView pickButtonImageView = new ImageView("resources/orcapick.png");
+        ImageView pickButtonImageView = new ImageView("resources/whalepick.png");
         /*pickButtonImageView.setFitHeight(15);
         pickButtonImageView.setFitWidth(15);*/
         pickButton.setGraphic(pickButtonImageView);
 
-        //TODO: Ändern des Bildes zu einem richtigen Orca
-        ImageView putButtonImageView = new ImageView("resources/orcaput.png");
+        ImageView putButtonImageView = new ImageView("resources/whaleput.png");
         /*putButtonImageView.setFitWidth(15);
         putButtonImageView.setFitHeight(15);*/
         putButton.setGraphic(putButtonImageView);
@@ -345,8 +367,6 @@ public class Main extends Application {
         /*restartButtonImageView.setFitHeight(15);
         removeButtonImageView.setFitWidth(15);*/
         restartButton.setGraphic(restartButtonImageView);
-
-
 
 
     }
@@ -370,7 +390,7 @@ public class Main extends Application {
         createToolbar();
         buildScene();
 
-        primaryStage.setScene(new Scene(outerBorder, 1000, 500));
+        primaryStage.setScene(new Scene(outerBorder, 1200, 600));
         primaryStage.show();
 
     }
