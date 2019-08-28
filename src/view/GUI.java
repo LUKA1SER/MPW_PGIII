@@ -11,9 +11,8 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import java.sql.SQLOutput;
 
-public class Main extends Application {
+public class GUI extends Application {
 
     // Buttons
     public Button newFileButton;
@@ -21,7 +20,6 @@ public class Main extends Application {
     public Button saveButton;
     public Button compileButton;
     public Button fieldButton;
-    // TODO: nächste vier in ToggleButton ändern
     public Button whaleButton;
     public Button fishButton;
     public Button boatButton;
@@ -54,33 +52,33 @@ public class Main extends Application {
 
 
     //Untermenues
-    MenuItem newFile;
-    MenuItem openFile;
-    MenuItem compileFile;
-    MenuItem printFile;
-    MenuItem printFileSurroundings;
-    MenuItem endSimulation;
-    MenuItem saveXML;
-    MenuItem saveJAXB;
-    MenuItem saveSerialize;
-    MenuItem loadXML;
-    MenuItem loadJAXB;
-    MenuItem saveAsJPG;
-    MenuItem saveAsPNG;
-    MenuItem changeSize;
-    RadioMenuItem placeWhale;
-    RadioMenuItem placeFish;
-    RadioMenuItem placeBoat;
-    RadioMenuItem deleteField;
-    ToggleGroup menu;
-    MenuItem countFishes;
-    MenuItem turnLeft;
-    MenuItem moveFront;
-    MenuItem pickFish;
-    MenuItem putFish;
-    MenuItem startContinue;
-    MenuItem pause;
-    MenuItem stop;
+    public MenuItem newFile;
+    public MenuItem openFile;
+    public MenuItem compileFile;
+    public MenuItem printFile;
+    public MenuItem printFileSurroundings;
+    public MenuItem endSimulation;
+    public MenuItem saveXML;
+    public MenuItem saveJAXB;
+    public MenuItem saveSerialize;
+    public MenuItem loadXML;
+    public MenuItem loadJAXB;
+    public MenuItem saveAsJPG;
+    public MenuItem saveAsPNG;
+    public MenuItem changeSize;
+    public RadioMenuItem placeWhale;
+    public RadioMenuItem placeFish;
+    public RadioMenuItem placeBoat;
+    public RadioMenuItem deleteField;
+    public ToggleGroup menu;
+    public MenuItem countFishes;
+    public MenuItem turnLeft;
+    public MenuItem moveFront;
+    public MenuItem pickFish;
+    public MenuItem putFish;
+    public MenuItem startContinue;
+    public MenuItem pause;
+    public MenuItem stop;
 
     //Menu Bar
     public MenuBar menuBar;
@@ -107,6 +105,7 @@ public class Main extends Application {
         splitPane.getItems().addAll(leftPane, rightPane);
     }
 
+    // Editor Menü erstellen
     public void initializeEditorMenu() {
         editorMenu = new Menu("_Editor");
         newFile = new MenuItem("Neu");
@@ -139,6 +138,7 @@ public class Main extends Application {
         editorMenu.getItems().addAll(newFile, openFile, new SeparatorMenuItem(), compileFile, printFile, new SeparatorMenuItem(), endSimulation);
     }
 
+    // Editor Menü erstellen
     public void initializeSurroundingsMenu() {
         surroundingsMenu = new Menu("_Umgebung");
         surroundingsMenuSave = new Menu("Speichern");
@@ -162,7 +162,7 @@ public class Main extends Application {
         changeSize = new MenuItem("Grösse ändern...");
 
         menu = new ToggleGroup();
-        placeWhale = new RadioMenuItem("Wal platzieren");
+        placeWhale = new RadioMenuItem("Whale platzieren");
         placeFish = new RadioMenuItem("Fisch platzieren");
         placeBoat = new RadioMenuItem("Boot platzieren");
         deleteField = new RadioMenuItem("Feld löschen");
@@ -176,6 +176,7 @@ public class Main extends Application {
                 changeSize,new SeparatorMenuItem(), placeWhale, placeFish, placeBoat, deleteField);
     }
 
+    // Editr
     public void initializeWhaleMenu() {
         whaleMenu = new Menu("_Wal");
         countFishes = new MenuItem("Fische im Maul...");
@@ -241,7 +242,7 @@ public class Main extends Application {
         fieldButton = new Button();
         fieldButton.setTooltip(new Tooltip("Neues Geländefeld setzen"));
         whaleButton = new Button();
-        whaleButton.setTooltip(new Tooltip("Wal platzieren"));
+        whaleButton.setTooltip(new Tooltip("Whale platzieren"));
         fishButton = new Button();
         fishButton.setTooltip(new Tooltip("Fisch platzieren"));
         boatButton = new Button();
@@ -251,9 +252,9 @@ public class Main extends Application {
         countFishButton = new Button();
         countFishButton.setTooltip(new Tooltip("Anzahl Fische im Maul ausgeben"));
         turnButton = new Button();
-        turnButton.setTooltip(new Tooltip("Wal um 90° nach links drehen"));
+        turnButton.setTooltip(new Tooltip("Whale um 90° nach links drehen"));
         moveButton = new Button();
-        moveButton.setTooltip(new Tooltip("Wal um ein Feld nach vorne bewegen"));
+        moveButton.setTooltip(new Tooltip("Whale um ein Feld nach vorne bewegen"));
         pickButton = new Button();
         pickButton.setTooltip(new Tooltip("Fisch aufnehmen"));
         putButton = new Button();
@@ -278,10 +279,6 @@ public class Main extends Application {
     }
 
     //erstellen der ImageViews für die Bilder und hinzufügen zu den Buttons
-    // URL beim erstellen von ImageViews erstellen von:
-    // https://stackoverflow.com/questions/29419707/javafx-image-imageview-nullpointerexception
-    //
-
     public void createImageViews() {
         ImageView newFileButtonImageView = new ImageView("/resources/file.png");
         /*newFileButtonImageView.setFitHeight(15);
@@ -370,6 +367,7 @@ public class Main extends Application {
 
 
     }
+
 
     public void buildScene() {
         createToolbar();
