@@ -33,8 +33,8 @@ public class Whale {
         this.ocean.isMouthEmpty();
     }
 
-    public void shipInFront() {
-        this.ocean.shipInFront();
+    public void shipInFront(int direction) {
+        this.ocean.shipInFront(direction);
     }
 
     public void fishOnTile() {

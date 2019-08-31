@@ -1,4 +1,4 @@
-package model;
+package model.exceptions;
 
 public class NoFishesException extends WhaleException {
     @Override

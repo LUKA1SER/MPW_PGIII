@@ -2,12 +2,17 @@ package model;
 
 // @Author: Lukas Kaiser
 
+import model.exceptions.NoFishesException;
+import model.exceptions.NoFishesInMouthException;
+import model.exceptions.OutOfBoundsException;
+import model.exceptions.ShipInFrontException;
+
 public class Ocean {
 
     private int[][] oceanTiles;
 
-    private final static int START_ROWS = 15; // Zeilen
-    private final static int START_COLS = 10; // Spalten
+    private final static int START_ROWS = 5; // Zeilen
+    private final static int START_COLS = 5; // Spalten
 
     private final static int NORTH = 0;
     private final static int WEST = 1;
@@ -23,11 +28,15 @@ public class Ocean {
     private int whaleDirection;
     private int fishesInMouth;
 
-    public Ocean (int START_ROWS, int START_COLS){
-        oceanTiles = new int[START_COLS][START_ROWS];
+    public int getFishesInMouth() {
+        return this.fishesInMouth;
+    }
+
+    public Ocean (){
+        oceanTiles = new int[START_ROWS][START_COLS];
         whale = new Whale(this);
-        whaleRow = 0;
-        whaleCol = 0;
+        whaleRow = 1;
+        whaleCol = 1;
         whaleDirection = EAST;
         fishesInMouth = 0;
 
@@ -37,12 +46,45 @@ public class Ocean {
                 oceanTiles[i][j] = NORMAL_FIELD;
             }
         }
+        // oceanTiles[0][1] = 1;
     }
 
     // Wal vor bewegen
-
-    public void move() {
-
+    public void move() throws ShipInFrontException, OutOfBoundsException {
+        switch(whaleDirection) {
+            case NORTH: whaleRow -= 1;
+                if (whaleRow < 0) {
+                    throw new OutOfBoundsException();
+                }
+                if (oceanTiles[whaleRow][whaleCol] == -1) {
+                    throw new ShipInFrontException();
+                }
+                break;
+            case SOUTH: whaleRow += 1;
+                if (whaleRow > oceanTiles.length - 1) {
+                    throw new OutOfBoundsException();
+                }
+                if (oceanTiles[whaleRow][whaleCol] == -1) {
+                    throw new ShipInFrontException();
+                }
+                break;
+            case EAST: whaleCol += 1;
+                if (whaleCol > oceanTiles[0].length - 1) {
+                    throw new OutOfBoundsException();
+                }
+                if (oceanTiles[whaleRow][whaleCol] == -1) {
+                    throw new ShipInFrontException();
+                }
+                break;
+            case WEST: whaleCol -= 1;
+                if (whaleCol < 0) {
+                    throw new OutOfBoundsException();
+                }
+                if (oceanTiles[whaleRow][whaleCol] == -1) {
+                    throw new ShipInFrontException();
+                }
+                break;
+        }
     }
 
     // Wal drehen (90° nach links)
@@ -60,7 +102,7 @@ public class Ocean {
 
     // Fisch ablegen
     public void putFish() throws NoFishesInMouthException {
-        if (this.fishesInMouth > 0) {
+        if (!isMouthEmpty()) {
             placeFish(whaleRow, whaleCol);
             this.fishesInMouth -= 1;
         } else {
@@ -70,26 +112,84 @@ public class Ocean {
 
     // Maul Leer?
     public boolean isMouthEmpty() {
-        return true;
+        if (this.getFishesInMouth() == 0) {
+            return true;
+        }
+        return false;
     }
 
     // Schiff da? (Ist ein Schiff auf dem folgenden Feld?)
-    public boolean shipInFront() {
-        return true;
+    public boolean shipInFront(int direction) {
+        switch (direction) {
+            case 0:
+                if (oceanTiles[whaleRow - 1][whaleRow] == -1) {
+                    return true;
+                }
+                break;
+            case 1:
+                if (oceanTiles[whaleRow][whaleRow - 1] == -1) {
+                    return true;
+                }
+                break;
+            case 2:
+                if (oceanTiles[whaleRow + 1][whaleRow] == -1) {
+                    return true;
+                }
+                break;
+            case 3:
+                if (oceanTiles[whaleRow ][whaleRow + 1] == -1) {
+                    return true;
+                }
+                break;
+        }
+        return false;
     }
 
-    // Fisch da? (Ist ein Schiff auf dem aktuellen Feld?)
+    // Fisch da? (Ist ein Fisch auf dem aktuellen Feld?)
     public boolean fishOnTile() {
-        return true;
+        if (oceanTiles[whaleRow][whaleCol] >= 1) {
+            return true;
+        }
+        return false;
     }
 
 
     // Ozean größe anpassen
+    public int[][] setOceanSize(int rows, int cols) {
+        int[][] tmp = new int[rows][cols];
+
+        if (tmp.length > oceanTiles.length && tmp[0].length > oceanTiles[0].length) {
+            for (int i = 0; i < oceanTiles.length; i++) {
+                for (int j = 0; j < oceanTiles.length; j++) {
+                    tmp[i][j] = oceanTiles[i][j];
+                }
+            }
+        } else if (tmp.length < oceanTiles.length && tmp[0].length < oceanTiles[0].length) {
+            for (int i = 0; i <tmp.length ; i++) {
+                for (int j = 0; j < tmp.length; j++) {
+                    tmp[i][j] = oceanTiles[i][j];
+                }
+            }
+        }
+
+        this.oceanTiles = tmp;
+
+        if(this.whaleRow >= rows && this.whaleCol >= cols) {
+            if (this.oceanTiles[0][0] == -1) {
+                this.oceanTiles[0][0] = 0;
+            }
+            this.whaleCol = 0;
+            this.whaleRow = 0;
+        }
+
+
+        return oceanTiles;
+    }
 
     // Ozean Wal platzieren
     public void placeWhale(int row, int col) {
-        this.whaleRow = row;
-        this.whaleCol = col;
+        setWhaleCol(col);
+        setWhaleRow(row);
     }
 
     // Ozean Schiff setzen
@@ -126,10 +226,83 @@ public class Ocean {
         }
     }
 
-    // Mauer auf dem Feld (Ist eine Mauer auf dem Feld?)
+    // Getter und Setter Methoden
 
-    // Fisch auf dem Feld (Ist ein Fisch auf dem Feld?)
+    public int[][] getOceanTiles() {
+        return oceanTiles;
+    }
 
+    public void setOceanTiles(int[][] oceanTiles) {
+        this.oceanTiles = oceanTiles;
+    }
+
+    public static int getStartRows() {
+        return START_ROWS;
+    }
+
+    public static int getStartCols() {
+        return START_COLS;
+    }
+
+    public static int getNORTH() {
+        return NORTH;
+    }
+
+    public static int getWEST() {
+        return WEST;
+    }
+
+    public static int getSOUTH() {
+        return SOUTH;
+    }
+
+    public static int getEAST() {
+        return EAST;
+    }
+
+    public static int getSHIP() {
+        return SHIP;
+    }
+
+    public static int getNormalField() {
+        return NORMAL_FIELD;
+    }
+
+    public Whale getWhale() {
+        return whale;
+    }
+
+    public void setWhale(Whale whale) {
+        this.whale = whale;
+    }
+
+    public int getWhaleRow() {
+        return whaleRow;
+    }
+
+    public void setWhaleRow(int whaleRow) {
+        this.whaleRow = whaleRow;
+    }
+
+    public int getWhaleCol() {
+        return whaleCol;
+    }
+
+    public void setWhaleCol(int whaleCol) {
+        this.whaleCol = whaleCol;
+    }
+
+    public int getWhaleDirection() {
+        return whaleDirection;
+    }
+
+    public void setWhaleDirection(int whaleDirection) {
+        this.whaleDirection = whaleDirection;
+    }
+
+    public void setFishesInMouth(int fishesInMouth) {
+        this.fishesInMouth = fishesInMouth;
+    }
 
 }
 
