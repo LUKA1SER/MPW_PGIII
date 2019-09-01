@@ -46,10 +46,9 @@ public class Ocean {
                 oceanTiles[i][j] = NORMAL_FIELD;
             }
         }
-        // oceanTiles[0][1] = 1;
     }
 
-    // Wal vor bewegen
+    // Wal vor bewegen und bei Einschränkungen durch Spielfeldrand oder Schiff Exception werfen
     public void move() throws ShipInFrontException, OutOfBoundsException {
         switch(whaleDirection) {
             case NORTH: whaleRow -= 1;
@@ -110,7 +109,7 @@ public class Ocean {
         }
     }
 
-    // Maul Leer?
+    // Prüfen, ob der Wal Fische im Maul hat
     public boolean isMouthEmpty() {
         if (this.getFishesInMouth() == 0) {
             return true;
@@ -118,26 +117,26 @@ public class Ocean {
         return false;
     }
 
-    // Schiff da? (Ist ein Schiff auf dem folgenden Feld?)
-    public boolean shipInFront(int direction) {
-        switch (direction) {
-            case 0:
-                if (oceanTiles[whaleRow - 1][whaleRow] == -1) {
+    // prüfen, ob ein Schiff auf dem folgenden Feld in Blickrichtung des Wals ist
+    public boolean shipInFront() {
+        switch (whaleDirection) {
+            case NORTH:
+                if (oceanTiles[whaleRow -  1][whaleCol] == -1) {
                     return true;
                 }
                 break;
-            case 1:
-                if (oceanTiles[whaleRow][whaleRow - 1] == -1) {
+            case SOUTH:
+                if (oceanTiles[whaleRow + 1][whaleCol] == -1) {
                     return true;
                 }
                 break;
-            case 2:
-                if (oceanTiles[whaleRow + 1][whaleRow] == -1) {
+            case EAST:
+                if (oceanTiles[whaleRow][whaleCol + 1] == -1) {
                     return true;
                 }
                 break;
-            case 3:
-                if (oceanTiles[whaleRow ][whaleRow + 1] == -1) {
+            case WEST:
+                if (oceanTiles[whaleRow][whaleCol - 1] == -1) {
                     return true;
                 }
                 break;
@@ -145,7 +144,7 @@ public class Ocean {
         return false;
     }
 
-    // Fisch da? (Ist ein Fisch auf dem aktuellen Feld?)
+    // Sind auf dem aktuellen Feld >= 1 Fisch?
     public boolean fishOnTile() {
         if (oceanTiles[whaleRow][whaleCol] >= 1) {
             return true;
@@ -192,9 +191,16 @@ public class Ocean {
         setWhaleRow(row);
     }
 
-    // Ozean Schiff setzen
+    // Schiff setzen
     public void placeShip(int row, int col) {
         oceanTiles[row][col] = SHIP;
+    }
+
+    // Schiff entfernen
+    public void removeShip(int row, int col) {
+        if (oceanTiles[row][col] == -1) {
+            oceanTiles[row][col] = NORMAL_FIELD;
+        }
     }
 
     // Ozean Fisch setzen
@@ -205,10 +211,9 @@ public class Ocean {
     // Ozean einen Fisch weniger auf dem Feld
     public void removeFish(int row, int col) throws NoFishesException {
         // Wenn kein Fisch auf dem Feld ist, Exception werfen
-        if (oceanTiles[row][col] == 0) {
+        if (oceanTiles[row][col] == NORMAL_FIELD) {
             throw new NoFishesException();
         }
-
         oceanTiles[row][col] -= 1;
     }
 

@@ -10,9 +10,6 @@ public class Whale {
     }
 
     // Wal bewegungs-Methoden rufen bewegungs-Methoden des Territoriums auf
-
-    // Beispiel: vor() { this.ocean.vor() }
-
     public void move() {
         this.ocean.move();
     }
@@ -33,8 +30,8 @@ public class Whale {
         this.ocean.isMouthEmpty();
     }
 
-    public void shipInFront(int direction) {
-        this.ocean.shipInFront(direction);
+    public void shipInFront() {
+        this.ocean.shipInFront();
     }
 
     public void fishOnTile() {

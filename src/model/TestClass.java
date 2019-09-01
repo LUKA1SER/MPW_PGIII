@@ -36,23 +36,43 @@ public class TestClass {
                 System.out.println();
             }
 
-
             eingabe = IO.readChar("Eingabe");
 
             switch(eingabe) {
-                case 't': ocean.getWhale().turn();
+                case 'l': ocean.getWhale().turn();
                             break;
-                case 'm': ocean.getWhale().move();
+                case 'v': ocean.getWhale().move();
                             break;
                 case 'n': ocean.getWhale().pickFish();
                             break;
-                case 'p': ocean.getWhale().putFish();
+                case 'h': ocean.getWhale().putFish();
                             break;
-                case 's': oceanArray = ocean.setOceanSize(3,3);
+                case 'k': oceanArray = ocean.setOceanSize(3,3);
                             break;
                 case 'g': oceanArray = ocean.setOceanSize(10, 10);
                             break;
 
+                case 'm': if (ocean.isMouthEmpty()) {
+                        System.out.println("Maul leer");
+                        break;
+                    } else {
+                        System.out.println("Fisch im Maul");
+                        break;
+                    }
+
+                case 's': if (ocean.shipInFront()) {
+                        System.out.println("Schiff im Weg");
+                        break;
+                    } else {
+                        System.out.println("Vorn frei!");
+                        break;
+                    }
+
+                case 'f': if (ocean.fishOnTile()) {
+                    System.out.println("Fisch auf dem Feld");
+                    } else {
+                        System.out.println("Kein Fisch auf dem Feld");
+                    }
             }
 
 
