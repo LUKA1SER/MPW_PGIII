@@ -1,18 +1,18 @@
 package view;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import model.Ocean;
 
 
 public class GUI extends Application {
+
+    private Ocean ocean;
 
     // Buttons
     public Button newFileButton;
@@ -37,6 +37,9 @@ public class GUI extends Application {
     //Border Panes
     public BorderPane outerBorder;
     public BorderPane innerBorder;
+
+    private StackPane leftPane;
+    private ScrollPane rightPane;
 
     //SplitPane
     SplitPane splitPane;
@@ -100,9 +103,17 @@ public class GUI extends Application {
     public void createSplitPane() {
         splitPane = new SplitPane();
         innerBorder.setCenter(splitPane);
-        StackPane leftPane = new StackPane(new TextArea());
-        StackPane rightPane = new StackPane(new Pane());
+        leftPane = new StackPane(new TextArea());
+        rightPane = createScrollPane();
         splitPane.getItems().addAll(leftPane, rightPane);
+    }
+
+    public ScrollPane createScrollPane() {
+        rightPane = new ScrollPane();
+        OceanPanel oceanPanel = new OceanPanel(this.ocean, this.rightPane);
+        rightPane.setContent(oceanPanel);
+        return rightPane;
+
     }
 
     // Editor Menü erstellen
@@ -278,6 +289,7 @@ public class GUI extends Application {
 
     }
 
+    // TODO: Kommentare entfernen
     //erstellen der ImageViews für die Bilder und hinzufügen zu den Buttons
     public void createImageViews() {
         ImageView newFileButtonImageView = new ImageView("/resources/file.png");
@@ -380,6 +392,7 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        init();
         createPanes();
         createSplitPane();
         initializeMenus();
@@ -393,6 +406,10 @@ public class GUI extends Application {
 
     }
 
+    public void init() throws Exception {
+        super.init();
+        this.ocean = new Ocean();
+    }
 
     public static void main(String[] args) {
         launch(args);

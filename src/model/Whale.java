@@ -2,7 +2,7 @@ package model;
 
 public class Whale {
 
-    Ocean ocean;
+    private Ocean ocean;
 
     // alle Aktionen des Hamsters auf das Territorium (Ozean) auslagern
     Whale(Ocean ocean) {

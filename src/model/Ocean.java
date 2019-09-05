@@ -11,8 +11,11 @@ public class Ocean {
 
     private int[][] oceanTiles;
 
-    private final static int START_ROWS = 5; // Zeilen
-    private final static int START_COLS = 5; // Spalten
+    private final static int START_ROWS = 10; // Zeilen
+    private final static int START_COLS = 10; // Spalten
+
+    private static int rows;
+    private static int cols;
 
     private final static int NORTH = 0;
     private final static int WEST = 1;
@@ -33,10 +36,11 @@ public class Ocean {
     }
 
     public Ocean (){
+        this.rows = rows;
+        this.cols = cols;
         oceanTiles = new int[START_ROWS][START_COLS];
         whale = new Whale(this);
-        whaleRow = 1;
-        whaleCol = 1;
+        setWhaleTopLeft();
         whaleDirection = EAST;
         fishesInMouth = 0;
 
@@ -46,6 +50,11 @@ public class Ocean {
                 oceanTiles[i][j] = NORMAL_FIELD;
             }
         }
+
+        // Test fuer die GUI
+        setField(3,3, oceanTiles, -1);
+        setField(1,2, oceanTiles, 1);
+
     }
 
     // Wal vor bewegen und bei Einschränkungen durch Spielfeldrand oder Schiff Exception werfen
@@ -152,9 +161,10 @@ public class Ocean {
         return false;
     }
 
-
     // Ozean größe anpassen
     public int[][] setOceanSize(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
         int[][] tmp = new int[rows][cols];
 
         if (tmp.length > oceanTiles.length && tmp[0].length > oceanTiles[0].length) {
@@ -173,12 +183,11 @@ public class Ocean {
 
         this.oceanTiles = tmp;
 
-        if(this.whaleRow >= rows && this.whaleCol >= cols) {
+        if(this.whaleRow >= rows || this.whaleCol >= cols) {
             if (this.oceanTiles[0][0] == -1) {
                 this.oceanTiles[0][0] = 0;
             }
-            this.whaleCol = 0;
-            this.whaleRow = 0;
+            this.setWhaleTopLeft();
         }
 
 
@@ -189,6 +198,10 @@ public class Ocean {
     public void placeWhale(int row, int col) {
         setWhaleCol(col);
         setWhaleRow(row);
+    }
+
+    public void setWhaleTopLeft() {
+        this.placeWhale(0,0);
     }
 
     // Schiff setzen
@@ -231,6 +244,18 @@ public class Ocean {
         }
     }
 
+    // Breite des Ozeans für das OceanPanel
+    public int getOceanWidth () {
+        return (getNoOfCols() + 2);
+    }
+
+    // Höhe des Ozeans für das OceanPanel
+    public int getOceanHeight() {
+        return (getNoOfRows()+ 2);
+    }
+
+
+
     // Getter und Setter Methoden
 
     public int[][] getOceanTiles() {
@@ -241,35 +266,43 @@ public class Ocean {
         this.oceanTiles = oceanTiles;
     }
 
-    public static int getStartRows() {
-        return START_ROWS;
+    public void setField(int r, int c, int[][] array, int value) {
+        array[r][c] = value;
     }
 
-    public static int getStartCols() {
-        return START_COLS;
+    public int getNoOfRows() {
+        return this.oceanTiles.length;
     }
 
-    public static int getNORTH() {
+    public int getNoOfCols() {
+        return this.oceanTiles[0].length;
+    }
+
+    public int getField(int r, int c) {
+        return this.oceanTiles[r][c];
+    }
+
+    public int getNORTH() {
         return NORTH;
     }
 
-    public static int getWEST() {
+    public int getWEST() {
         return WEST;
     }
 
-    public static int getSOUTH() {
+    public int getSOUTH() {
         return SOUTH;
     }
 
-    public static int getEAST() {
+    public int getEAST() {
         return EAST;
     }
 
-    public static int getSHIP() {
+    public int getSHIP() {
         return SHIP;
     }
 
-    public static int getNormalField() {
+    public int getNormalField() {
         return NORMAL_FIELD;
     }
 
@@ -296,6 +329,7 @@ public class Ocean {
     public void setWhaleCol(int whaleCol) {
         this.whaleCol = whaleCol;
     }
+
 
     public int getWhaleDirection() {
         return whaleDirection;

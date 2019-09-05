@@ -36,7 +36,7 @@ public class TestClass {
                 System.out.println();
             }
 
-            eingabe = IO.readChar("Eingabe");
+            eingabe = IO.readChar("Eingabe: ");
 
             switch(eingabe) {
                 case 'l': ocean.getWhale().turn();
