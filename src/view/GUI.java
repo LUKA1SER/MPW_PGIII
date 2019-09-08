@@ -3,6 +3,7 @@ package view;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
@@ -289,92 +290,58 @@ public class GUI extends Application {
 
     }
 
-    // TODO: Kommentare entfernen
+
     //erstellen der ImageViews für die Bilder und hinzufügen zu den Buttons
     public void createImageViews() {
         ImageView newFileButtonImageView = new ImageView("/resources/file.png");
-        /*newFileButtonImageView.setFitHeight(15);
-        newFileButtonImageView.setFitWidth(15);*/
         newFileButton.setGraphic(newFileButtonImageView);
 
         ImageView fileButtonImageView = new ImageView("/resources/folder.png");
-        /*newFileButtonImageView.setFitWidth(10);
-        newFileButtonImageView.setFitHeight(10);*/
         fileButton.setGraphic(fileButtonImageView);
 
         ImageView saveButtonImageView = new ImageView("/resources/save.png");
-        /*saveButtonImageView.setFitHeight(15);
-        saveButtonImageView.setFitWidth(15);*/
         saveButton.setGraphic(saveButtonImageView);
 
         ImageView compileButtonImageView = new ImageView("/resources/compile.png");
-        /*compileButtonImageView.setFitWidth(15);
-        compileButtonImageView.setFitHeight(15);*/
         compileButton.setGraphic(compileButtonImageView);
 
         ImageView fieldButtonImageView = new ImageView("/resources/water.png");
-        /*fieldButtonImageView.setFitHeight(15);
-        fileButtonImageView.setFitWidth(15);*/
         fieldButton.setGraphic(fieldButtonImageView);
 
-        ImageView whaleButtonImageView = new ImageView("resources/whale32.png");
-        /*whaleButtonImageView.setFitWidth(15);
-        whaleButtonImageView.setFitHeight(15);*/
+        ImageView whaleButtonImageView = new ImageView("resources/whale/whale32.png");
         whaleButton.setGraphic(whaleButtonImageView);
 
-        ImageView fishButtonImageView = new ImageView("resources/fish32.png");
-        /*fishButtonImageView.setFitHeight(15);
-        fishButtonImageView.setFitWidth(15);*/
+        ImageView fishButtonImageView = new ImageView("resources/fish/fish32.png");
         fishButton.setGraphic(fishButtonImageView);
 
         ImageView boatButtonImageView = new ImageView("resources/ship.png");
-        /*boatButtonImageView.setFitWidth(15);
-        boatButtonImageView.setFitHeight(15);*/
         boatButton.setGraphic(boatButtonImageView);
 
         ImageView removeButtonImageView = new ImageView("resources/cancel.png");
-        /*removeButtonImageView.setFitHeight(15);
-        removeButtonImageView.setFitWidth(15);*/
         removeButton.setGraphic(removeButtonImageView);
 
-        ImageView countFishButton = new ImageView("resources/whalefish.png");
-        /*countFishButton.setFitWidth(15);
-        countFishButton.setFitHeight(15);*/
+        ImageView countFishButton = new ImageView("resources/whale/whalefish.png");
         this.countFishButton.setGraphic(countFishButton);
 
-        ImageView turnButtonImageView = new ImageView("resources/whaleturn.png");
-        /*turnButtonImageView.setFitHeight(15);
-        turnButtonImageView.setFitWidth(15);*/
+        ImageView turnButtonImageView = new ImageView("resources/whale/whaleturn.png");
         turnButton.setGraphic(turnButtonImageView);
 
-        ImageView moveButtonImageView = new ImageView("resources/whalemove.png");
-        /*moveButtonImageView.setFitWidth(15);
-        moveButtonImageView.setFitHeight(15);*/
+        ImageView moveButtonImageView = new ImageView("resources/whale/whalemove.png");
         moveButton.setGraphic(moveButtonImageView);
 
-        ImageView pickButtonImageView = new ImageView("resources/whalepick.png");
-        /*pickButtonImageView.setFitHeight(15);
-        pickButtonImageView.setFitWidth(15);*/
+        ImageView pickButtonImageView = new ImageView("resources/whale/whalepick.png");
         pickButton.setGraphic(pickButtonImageView);
 
-        ImageView putButtonImageView = new ImageView("resources/whaleput.png");
-        /*putButtonImageView.setFitWidth(15);
-        putButtonImageView.setFitHeight(15);*/
+        ImageView putButtonImageView = new ImageView("resources/whale/whaleput.png");
         putButton.setGraphic(putButtonImageView);
 
         ImageView startButtonImageView = new ImageView("resources/play_button.png");
-        /*startButtonImageView.setFitHeight(15);
-        startButtonImageView.setFitWidth(15);*/
         startButton.setGraphic(startButtonImageView);
 
         ImageView pauseButtonImageView = new ImageView("resources/pause.png");
-        /*pauseButtonImageView.setFitWidth(15);
-        pauseButtonImageView.setFitHeight(15);*/
         pauseButton.setGraphic(pauseButtonImageView);
 
         ImageView restartButtonImageView = new ImageView("resources/stop.png");
-        /*restartButtonImageView.setFitHeight(15);
-        removeButtonImageView.setFitWidth(15);*/
         restartButton.setGraphic(restartButtonImageView);
 
 
@@ -401,6 +368,8 @@ public class GUI extends Application {
         createToolbar();
         buildScene();
 
+        primaryStage.getIcons().add(new Image("/resources/whale/whale32.png"));
+        primaryStage.setTitle("Ozean Mini-Programmierwelt");
         primaryStage.setScene(new Scene(outerBorder, 1200, 600));
         primaryStage.show();
 

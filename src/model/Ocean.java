@@ -52,8 +52,20 @@ public class Ocean {
         }
 
         // Test fuer die GUI
-        setField(3,3, oceanTiles, -1);
+        setField(2,3, oceanTiles, -1);
         setField(1,2, oceanTiles, 1);
+        setField(1,3, oceanTiles, 5);
+        setField(9,4, oceanTiles, 10);
+        setField(5,8, oceanTiles, 15);
+        // Testen der Bewegungen
+        /*this.move();
+        this.move();
+        this.turn();
+        this.turn();
+        this.turn();
+        this.move();
+        this.pickFish();
+        this.move();*/
 
     }
 
@@ -278,7 +290,7 @@ public class Ocean {
         return this.oceanTiles[0].length;
     }
 
-    public int getField(int r, int c) {
+    public int getFieldValue(int r, int c) {
         return this.oceanTiles[r][c];
     }
 
