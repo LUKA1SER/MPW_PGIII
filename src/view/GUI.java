@@ -1,6 +1,8 @@
 package view;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -21,10 +23,11 @@ public class GUI extends Application {
     public Button saveButton;
     public Button compileButton;
     public Button fieldButton;
-    public Button whaleButton;
-    public Button fishButton;
-    public Button boatButton;
-    public Button removeButton;
+    public ToggleButton whaleButton;
+    public ToggleButton fishButton;
+    public ToggleButton shipButton;
+    public ToggleButton removeButton;
+    public ToggleGroup buttonGroup;
 
     public Button countFishButton;
     public Button turnButton;
@@ -72,9 +75,9 @@ public class GUI extends Application {
     public MenuItem changeSize;
     public RadioMenuItem placeWhale;
     public RadioMenuItem placeFish;
-    public RadioMenuItem placeBoat;
+    public RadioMenuItem placeShip;
     public RadioMenuItem deleteField;
-    public ToggleGroup menu;
+    public ToggleGroup whaleMenuToggleGroup;
     public MenuItem countFishes;
     public MenuItem turnLeft;
     public MenuItem moveFront;
@@ -173,19 +176,15 @@ public class GUI extends Application {
         printFileSurroundings = new MenuItem("Drucken");
         changeSize = new MenuItem("Grösse ändern...");
 
-        menu = new ToggleGroup();
+        whaleMenuToggleGroup = new ToggleGroup();
         placeWhale = new RadioMenuItem("Whale platzieren");
         placeFish = new RadioMenuItem("Fisch platzieren");
-        placeBoat = new RadioMenuItem("Boot platzieren");
+        placeShip = new RadioMenuItem("Boot platzieren");
         deleteField = new RadioMenuItem("Feld löschen");
-        placeWhale.setToggleGroup(menu);
-        placeWhale.setSelected(true);
-        placeFish.setToggleGroup(menu);
-        placeBoat.setToggleGroup(menu);
-        deleteField.setToggleGroup(menu);
+
 
         surroundingsMenu.getItems().addAll(surroundingsMenuSave, surroundingsMenuLoad, surroundingsMenuSavePicture, printFileSurroundings,
-                changeSize,new SeparatorMenuItem(), placeWhale, placeFish, placeBoat, deleteField);
+                changeSize,new SeparatorMenuItem(), placeWhale, placeFish, placeShip, deleteField);
     }
 
     // Editr
@@ -243,49 +242,134 @@ public class GUI extends Application {
 
     //Erstellen der Buttons
     public void createButtons() {
+        buttonGroup = new ToggleGroup();
+
         newFileButton = new Button();
         newFileButton.setTooltip(new Tooltip("Neue Datei erstellen"));
+
         fileButton = new Button();
         fileButton.setTooltip(new Tooltip("Datei öffnen"));
+
         saveButton = new Button();
         saveButton.setTooltip(new Tooltip("Speichern"));
+
         compileButton = new Button();
         compileButton.setTooltip(new Tooltip("Kompilieren"));
+
         fieldButton = new Button();
         fieldButton.setTooltip(new Tooltip("Neues Geländefeld setzen"));
-        whaleButton = new Button();
+
+        whaleButton = new ToggleButton();
         whaleButton.setTooltip(new Tooltip("Whale platzieren"));
-        fishButton = new Button();
+
+        fishButton = new ToggleButton();
         fishButton.setTooltip(new Tooltip("Fisch platzieren"));
-        boatButton = new Button();
-        boatButton.setTooltip(new Tooltip("Boot platzieren"));
-        removeButton = new Button();
+
+        shipButton = new ToggleButton();
+        shipButton.setTooltip(new Tooltip("Boot platzieren"));
+
+        removeButton = new ToggleButton();
         removeButton.setTooltip(new Tooltip("Feld entfernen"));
+
         countFishButton = new Button();
         countFishButton.setTooltip(new Tooltip("Anzahl Fische im Maul ausgeben"));
+
         turnButton = new Button();
         turnButton.setTooltip(new Tooltip("Whale um 90° nach links drehen"));
+
         moveButton = new Button();
         moveButton.setTooltip(new Tooltip("Whale um ein Feld nach vorne bewegen"));
+
         pickButton = new Button();
         pickButton.setTooltip(new Tooltip("Fisch aufnehmen"));
+
         putButton = new Button();
         putButton.setTooltip(new Tooltip("Fisch ablegen"));
+
         startButton = new Button();
         startButton.setTooltip(new Tooltip("Programm starten"));
+
         pauseButton = new Button();
         pauseButton.setTooltip(new Tooltip("Programm pausieren"));
+
         restartButton = new Button();
         restartButton.setTooltip(new Tooltip("Programm anhalten"));
     }
 
+    public void setToggleGroups() {
+        whaleButton.setToggleGroup(buttonGroup);
+        fishButton.setToggleGroup(buttonGroup);
+        shipButton.setToggleGroup(buttonGroup);
+        removeButton.setToggleGroup(buttonGroup);
+
+        whaleButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                placeWhale.setSelected(true);
+            }
+        });
+
+        fishButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                placeFish.setSelected(true);
+            }
+        });
+
+        shipButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                placeShip.setSelected(true);
+            }
+        });
+
+        removeButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                deleteField.setSelected(true);
+            }
+        });
+
+        placeWhale.setToggleGroup(whaleMenuToggleGroup);
+        placeFish.setToggleGroup(whaleMenuToggleGroup);
+        placeShip.setToggleGroup(whaleMenuToggleGroup);
+        deleteField.setToggleGroup(whaleMenuToggleGroup);
+
+        placeWhale.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                whaleButton.setSelected(true);
+            }
+        });
+
+        placeFish.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                fishButton.setSelected(true);
+            }
+        });
+
+        placeShip.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                shipButton.setSelected(true);
+            }
+        });
+
+        deleteField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                removeButton.setSelected(true);
+            }
+        });
+    }
 
     //Erstellen der toolBar für die Buttons
     public void createToolbar() {
         speedSlider = new Slider(0, 1, 0.01);
         speedSlider.setTooltip(new Tooltip("Geschwindigkeit einstellen"));
         toolBar = new ToolBar(newFileButton, fileButton, new Separator(), saveButton, compileButton, new Separator(), fieldButton, whaleButton, fishButton,
-                boatButton, removeButton, new Separator(), countFishButton, turnButton, moveButton, pickButton, putButton, new Separator(),
+                shipButton, removeButton, new Separator(), countFishButton, turnButton, moveButton, pickButton, putButton, new Separator(),
                 startButton, pauseButton, restartButton, speedSlider);
 
     }
@@ -315,7 +399,7 @@ public class GUI extends Application {
         fishButton.setGraphic(fishButtonImageView);
 
         ImageView boatButtonImageView = new ImageView("resources/ship.png");
-        boatButton.setGraphic(boatButtonImageView);
+        shipButton.setGraphic(boatButtonImageView);
 
         ImageView removeButtonImageView = new ImageView("resources/cancel.png");
         removeButton.setGraphic(removeButtonImageView);
@@ -364,6 +448,7 @@ public class GUI extends Application {
         createSplitPane();
         initializeMenus();
         createButtons();
+        setToggleGroups();
         createImageViews();
         createToolbar();
         buildScene();

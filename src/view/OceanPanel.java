@@ -1,8 +1,6 @@
 package view;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.geometry.Bounds;
+
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
@@ -11,8 +9,11 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import model.Ocean;
 
+import java.util.Observable;
+import java.util.Observer;
 
-public class OceanPanel extends Region {
+
+public class OceanPanel extends Region implements Observer {
 
     private Ocean ocean;
     private ScrollPane parent;
@@ -34,6 +35,7 @@ public class OceanPanel extends Region {
 
     public OceanPanel(Ocean ocean, ScrollPane sc) {
         this.ocean = ocean;
+        ocean.addObserver(this);
         this.parent = sc;
         loadImages();
         loadWhaleImages();
@@ -44,10 +46,12 @@ public class OceanPanel extends Region {
 
     // zeichnen des Feldes
     public void paintOcean() {
-        canvas = new Canvas(this.getFieldWidth(), this.getFieldHeight());
+        canvas = new Canvas((this.getFieldWidth() + 200), (this.getFieldHeight() + 200));
+        this.setPrefSize(this.getFieldWidth(), this.getFieldHeight());
         gc = canvas.getGraphicsContext2D();
         this.getChildren().addAll(this.getCanvas());
         parent.viewportBoundsProperty().addListener((observable, oldValue, newValue) -> this.center());
+
 
         int r = 0;
         int c = 0;
@@ -83,6 +87,20 @@ public class OceanPanel extends Region {
                 gc.strokeRect(x + c * this.CELLSIZE, y + r * this.CELLSIZE, 34, 34);
             }
         }
+    }
+
+    // Feld berechnen, auf das geklickt wurde
+    public Ocean.Tile getTile(double x, double y) {
+        int ox = OceanPanel.CELLSIZE;
+        int oy = OceanPanel.CELLSIZE;
+        if (x < ox || y < oy || x >= ox + this.ocean.getNoOfCols() * OceanPanel.CELLSIZE
+                || y >= oy + this.ocean.getNoOfRows() * OceanPanel.CELLSIZE) {
+            return null;
+        }
+
+        int row = (int) ((y - oy) / OceanPanel.CELLSIZE);
+        int col = (int) ((x - ox) / OceanPanel.CELLSIZE);
+        return new Ocean.Tile(row, col);
     }
 
     // Laden der Bilder
@@ -148,5 +166,10 @@ public class OceanPanel extends Region {
 
     public Canvas getCanvas() {
         return canvas;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
     }
 }

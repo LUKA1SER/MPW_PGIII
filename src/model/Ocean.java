@@ -2,15 +2,20 @@ package model;
 
 // @Author: Lukas Kaiser
 
+import javafx.beans.InvalidationListener;
 import model.exceptions.NoFishesException;
 import model.exceptions.NoFishesInMouthException;
 import model.exceptions.OutOfBoundsException;
 import model.exceptions.ShipInFrontException;
+import view.OceanPanel;
 
-public class Ocean {
+import java.util.Observable;
+
+public class Ocean extends Observable {
 
     private int[][] oceanTiles;
 
+    // funktioniert nur bis groesse 78
     private final static int START_ROWS = 10; // Zeilen
     private final static int START_COLS = 10; // Spalten
 
@@ -31,18 +36,20 @@ public class Ocean {
     private int whaleDirection;
     private int fishesInMouth;
 
+    private OceanPanel oceanPanel;
+
     public int getFishesInMouth() {
         return this.fishesInMouth;
     }
 
     public Ocean (){
-        this.rows = rows;
-        this.cols = cols;
         oceanTiles = new int[START_ROWS][START_COLS];
         whale = new Whale(this);
         setWhaleTopLeft();
         whaleDirection = EAST;
         fishesInMouth = 0;
+
+
 
         // alle Felder des Arrays auf 0 (normales Feld) setzen
         for (int i = 0; i < oceanTiles.length ; i++) {
@@ -52,11 +59,11 @@ public class Ocean {
         }
 
         // Test fuer die GUI
-        setField(2,3, oceanTiles, -1);
         setField(1,2, oceanTiles, 1);
         setField(1,3, oceanTiles, 5);
         setField(9,4, oceanTiles, 10);
         setField(5,8, oceanTiles, 15);
+        placeShip(2,3);
         // Testen der Bewegungen
         /*this.move();
         this.move();
@@ -219,6 +226,8 @@ public class Ocean {
     // Schiff setzen
     public void placeShip(int row, int col) {
         oceanTiles[row][col] = SHIP;
+        setChanged();
+        this.notifyObservers();
     }
 
     // Schiff entfernen
@@ -258,15 +267,19 @@ public class Ocean {
 
     // Breite des Ozeans für das OceanPanel
     public int getOceanWidth () {
-        return (getNoOfCols() + 2);
+        return (getNoOfCols());
     }
 
     // Höhe des Ozeans für das OceanPanel
     public int getOceanHeight() {
-        return (getNoOfRows()+ 2);
+        return (getNoOfRows());
     }
 
+    @Override
+    public void notifyObservers() {
 
+        super.notifyObservers();
+    }
 
     // Getter und Setter Methoden
 
@@ -353,6 +366,24 @@ public class Ocean {
 
     public void setFishesInMouth(int fishesInMouth) {
         this.fishesInMouth = fishesInMouth;
+    }
+
+    public static class Tile {
+        int row;
+        int col;
+
+        public Tile(int r, int c) {
+            this.row = r;
+            this.col = c;
+        }
+
+        public int getCol() {
+            return col;
+        }
+
+        public int getRow() {
+            return row;
+        }
     }
 
 }
