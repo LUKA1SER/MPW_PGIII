@@ -12,9 +12,9 @@ public class OceanEventHandler implements EventHandler<MouseEvent> {
     //PlacingState state;
 
 
-    public OceanEventHandler() {
-        //this.ocean = ocean;
-        //this.oceanPanel = op;
+    public OceanEventHandler(Ocean ocean, OceanPanel op) {
+        this.ocean = ocean;
+        this.oceanPanel = op;
     }
 
     @Override
@@ -28,7 +28,10 @@ public class OceanEventHandler implements EventHandler<MouseEvent> {
     }
 
 
-    private void mousePressed(MouseEvent o) {}
+    private void mousePressed(MouseEvent o) {
+        // hier jeweils switch-case für das Schiff/Wal/etc. rein
+        System.out.println(oceanPanel.getTile(o.getX(), o.getY()));
+    }
 
     private void mouseDragged(MouseEvent o) {}
 
@@ -36,9 +39,5 @@ public class OceanEventHandler implements EventHandler<MouseEvent> {
 
     // switch case für verschiedene Methoden placeShip, placeHamster
     // dann ocean.paintOcean() aufrufen
-
-    // Methode getTile, um richtiges Feld aus der GUI auszugeben
-
-
 
 }

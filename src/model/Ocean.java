@@ -384,6 +384,11 @@ public class Ocean extends Observable {
         public int getRow() {
             return row;
         }
+
+        @Override
+        public String toString() {
+            return this.row + " " + this.col;
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package view;
 
 
+import controller.OceanEventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
@@ -42,6 +43,11 @@ public class OceanPanel extends Region implements Observer {
         loadFishImages();
         paintOcean();
         center();
+
+        OceanEventHandler oeh = new OceanEventHandler(this.ocean, this);
+        this.setOnMousePressed(oeh);
+        this.setOnMouseDragged(oeh);
+        this.setOnMouseReleased(oeh);
     }
 
     // zeichnen des Feldes
