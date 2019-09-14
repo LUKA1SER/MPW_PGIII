@@ -210,13 +210,18 @@ public class Ocean extends Observable {
         }
 
 
+        setChanged();
+        notifyObservers();
         return oceanTiles;
+
     }
 
     // Ozean Wal platzieren
     public void placeWhale(int row, int col) {
         setWhaleCol(col);
         setWhaleRow(row);
+        setChanged();
+        notifyObservers();
     }
 
     public void setWhaleTopLeft() {
@@ -227,7 +232,7 @@ public class Ocean extends Observable {
     public void placeShip(int row, int col) {
         oceanTiles[row][col] = SHIP;
         setChanged();
-        this.notifyObservers();
+        notifyObservers();
     }
 
     // Schiff entfernen
@@ -240,6 +245,8 @@ public class Ocean extends Observable {
     // Ozean Fisch setzen
     public void placeFish(int row, int col) {
         oceanTiles[row][col] += 1;
+        setChanged();
+        notifyObservers();
     }
 
     // Ozean einen Fisch weniger auf dem Feld
@@ -254,6 +261,8 @@ public class Ocean extends Observable {
     // Ozean Feld leeren
     public void clearTile(int row, int col) {
         oceanTiles[row][col] = NORMAL_FIELD;
+        setChanged();
+        notifyObservers();
     }
 
     // ganzen Ozean leeren

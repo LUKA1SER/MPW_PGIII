@@ -2,6 +2,8 @@ package view;
 
 
 import controller.OceanEventHandler;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
@@ -9,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import model.Ocean;
+import model.PlacingState;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -19,7 +22,8 @@ public class OceanPanel extends Region implements Observer {
     private Ocean ocean;
     private ScrollPane parent;
     private Canvas canvas;
-    GraphicsContext gc;
+    private GraphicsContext gc;
+    PlacingState state;
 
     final static int CELLSIZE = 34;
     private int x = 10;
@@ -34,17 +38,19 @@ public class OceanPanel extends Region implements Observer {
     private Image whaleDown;
     private Image[] whales;
 
-    public OceanPanel(Ocean ocean, ScrollPane sc) {
+    public OceanPanel(Ocean ocean, ScrollPane sc, PlacingState state) {
         this.ocean = ocean;
-        ocean.addObserver(this);
         this.parent = sc;
+        this.state = state;
+        ocean.addObserver(this);
         loadImages();
         loadWhaleImages();
         loadFishImages();
         paintOcean();
-        center();
 
-        OceanEventHandler oeh = new OceanEventHandler(this.ocean, this);
+        state.addObserver(this);
+
+        OceanEventHandler oeh = new OceanEventHandler(this.ocean, this, this.state);
         this.setOnMousePressed(oeh);
         this.setOnMouseDragged(oeh);
         this.setOnMouseReleased(oeh);
@@ -52,11 +58,15 @@ public class OceanPanel extends Region implements Observer {
 
     // zeichnen des Feldes
     public void paintOcean() {
+        // TODO: Breite und Hoehe auf +2 * this.CELLSIZE ändern
         canvas = new Canvas((this.getFieldWidth() + 200), (this.getFieldHeight() + 200));
         this.setPrefSize(this.getFieldWidth(), this.getFieldHeight());
         gc = canvas.getGraphicsContext2D();
         this.getChildren().addAll(this.getCanvas());
-        parent.viewportBoundsProperty().addListener((observable, oldValue, newValue) -> this.center());
+        this.center(parent.getViewportBounds(), this);
+        parent.viewportBoundsProperty().addListener((observable, oldValue, newValue) -> {
+            this.center(newValue, this);
+        });
 
 
         int r = 0;
@@ -96,17 +106,10 @@ public class OceanPanel extends Region implements Observer {
     }
 
     // Feld berechnen, auf das geklickt wurde
-    public Ocean.Tile getTile(double x, double y) {
-        int ox = OceanPanel.CELLSIZE;
-        int oy = OceanPanel.CELLSIZE;
-        if (x < ox || y < oy || x >= ox + this.ocean.getNoOfCols() * OceanPanel.CELLSIZE
-                || y >= oy + this.ocean.getNoOfRows() * OceanPanel.CELLSIZE) {
-            return null;
-        }
-
-        int row = (int) ((y - oy) / OceanPanel.CELLSIZE);
-        int col = (int) ((x - ox) / OceanPanel.CELLSIZE);
-        return new Ocean.Tile(row, col);
+    public Ocean.Tile getTile (double xValue, double yValue) {
+        int x = ((int) (xValue/ 34));
+        int y = ((int) (yValue / 34));
+        return new Ocean.Tile(x, y);
     }
 
     // Laden der Bilder
@@ -147,17 +150,19 @@ public class OceanPanel extends Region implements Observer {
     }
 
     // Zentrieren des Feldes innerhalb der ScrollPane
-    public void center() {
-        if (parent.getViewportBounds().getWidth() > getFieldWidth()) {
-            this.getCanvas().setTranslateX((parent.getViewportBounds().getWidth() - getFieldWidth()) / 2);
+    // https://stackoverflow.com/questions/30687994/how-to-center-the-content-of-a-javafx-8-scrollpane
+    public void center(Bounds viewPortBounds, Node centeredNode) {
+        double width = viewPortBounds.getWidth();
+        double height = viewPortBounds.getHeight();
+        if (width > this.getFieldWidth()) {
+            centeredNode.setTranslateX((width - this.getFieldWidth()) / 2);
         } else {
-            this.canvas.setTranslateX(0);
+            centeredNode.setTranslateX(0);
         }
-
-        if (parent.getViewportBounds().getHeight() > getFieldHeight()) {
-            this.canvas.setTranslateY((parent.getViewportBounds().getHeight() - getFieldHeight()) / 2);
+        if (height > this.getFieldHeight()) {
+            centeredNode.setTranslateY((height - this.getFieldHeight()) / 2);
         } else {
-            this.canvas.setTranslateY(0);
+            centeredNode.setTranslateY(0);
         }
     }
 
@@ -176,6 +181,6 @@ public class OceanPanel extends Region implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-
+        this.paintOcean();
     }
 }

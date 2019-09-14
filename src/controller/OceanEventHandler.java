@@ -4,17 +4,21 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import model.Ocean;
+import model.PlacingState;
 import view.OceanPanel;
+
+import static model.PlacingState.*;
 
 public class OceanEventHandler implements EventHandler<MouseEvent> {
     private Ocean ocean;
-    OceanPanel oceanPanel;
-    //PlacingState state;
+    private OceanPanel oceanPanel;
+    private PlacingState state;
 
 
-    public OceanEventHandler(Ocean ocean, OceanPanel op) {
+    public OceanEventHandler(Ocean ocean, OceanPanel op, PlacingState state) {
         this.ocean = ocean;
         this.oceanPanel = op;
+        this.state = state;
     }
 
     @Override
@@ -29,11 +33,32 @@ public class OceanEventHandler implements EventHandler<MouseEvent> {
 
 
     private void mousePressed(MouseEvent o) {
-        // hier jeweils switch-case für das Schiff/Wal/etc. rein
-        System.out.println(oceanPanel.getTile(o.getX(), o.getY()));
+        Ocean.Tile tile = oceanPanel.getTile(o.getX(), o.getY());
+        System.out.println(state.getSelected());
+        switch(state.getSelected()) {
+            case CLEAR: ocean.clearTile(tile.getCol(), tile.getRow());
+                        break;
+            case WHALE: ocean.placeWhale(tile.getCol(), tile.getRow());
+                        break;
+            case SHIP: ocean.placeShip(tile.getCol(), tile.getRow());
+                        break;
+            case FISH: ocean.placeFish(tile.getCol(), tile.getRow());
+                        break;
+            default: break;
+        }
+
+
+        System.out.println(tile.toString());
     }
 
-    private void mouseDragged(MouseEvent o) {}
+    private void mouseDragged(MouseEvent o) {
+        Ocean.Tile tile = oceanPanel.getTile(o.getX(), o.getY());
+        if (state.getSelected() == WHALE) {
+            ocean.placeWhale(tile.getCol(), tile.getRow());
+        } else {
+            return;
+        }
+    }
 
     private void mouseReleased(MouseEvent o) {}
 

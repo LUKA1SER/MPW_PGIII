@@ -3,6 +3,7 @@ package view;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -10,12 +11,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import model.Ocean;
+import model.PlacingState;
 
 
 public class GUI extends Application {
 
     private Ocean ocean;
+    private OceanPanel op;
+    private PlacingState state;
 
     // Buttons
     public Button newFileButton;
@@ -114,8 +119,8 @@ public class GUI extends Application {
 
     public ScrollPane createScrollPane() {
         rightPane = new ScrollPane();
-        OceanPanel oceanPanel = new OceanPanel(this.ocean, this.rightPane);
-        rightPane.setContent(oceanPanel);
+        op = new OceanPanel(this.ocean, this.rightPane, state);
+        rightPane.setContent(op);
         return rightPane;
 
     }
@@ -257,16 +262,38 @@ public class GUI extends Application {
         compileButton.setTooltip(new Tooltip("Kompilieren"));
 
         fieldButton = new Button();
-        fieldButton.setTooltip(new Tooltip("Neues Geländefeld setzen"));
+        fieldButton.setTooltip(new Tooltip("Groesse des Feldes aendern"));
+        fieldButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Dialog<Pair<Integer, Integer>> dialog = new Dialog<>();
+                dialog.setTitle("Grösse ändern");
+
+                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+                GridPane buttonPane = new GridPane();
+                buttonPane.setHgap(10);
+                buttonPane.setVgap(10);
+                buttonPane.setPadding(new Insets(20, 150, 10, 10));
+
+                TextField height = new TextField();
+                TextField width = new TextField();
+                buttonPane.add(height, 2, 0);
+                buttonPane.add(new Label("Höhe: "), 1, 0);
+                buttonPane.add(width, 2,1);
+                buttonPane.add(new Label("Breite: "), 1, 1);
+                dialog.getDialogPane().setContent(buttonPane);
+                dialog.showAndWait();
+            }
+        });
 
         whaleButton = new ToggleButton();
-        whaleButton.setTooltip(new Tooltip("Whale platzieren"));
+        whaleButton.setTooltip(new Tooltip("Wal platzieren"));
 
         fishButton = new ToggleButton();
         fishButton.setTooltip(new Tooltip("Fisch platzieren"));
 
         shipButton = new ToggleButton();
-        shipButton.setTooltip(new Tooltip("Boot platzieren"));
+        shipButton.setTooltip(new Tooltip("Schiff platzieren"));
 
         removeButton = new ToggleButton();
         removeButton.setTooltip(new Tooltip("Feld entfernen"));
@@ -296,6 +323,10 @@ public class GUI extends Application {
         restartButton.setTooltip(new Tooltip("Programm anhalten"));
     }
 
+    private void createAlertField() {
+
+    }
+
     public void setToggleGroups() {
         whaleButton.setToggleGroup(buttonGroup);
         fishButton.setToggleGroup(buttonGroup);
@@ -306,6 +337,7 @@ public class GUI extends Application {
             @Override
             public void handle(ActionEvent event) {
                 placeWhale.setSelected(true);
+                state.setSelected(PlacingState.WHALE);
             }
         });
 
@@ -313,6 +345,7 @@ public class GUI extends Application {
             @Override
             public void handle(ActionEvent event) {
                 placeFish.setSelected(true);
+                state.setSelected(PlacingState.FISH);
             }
         });
 
@@ -320,6 +353,7 @@ public class GUI extends Application {
             @Override
             public void handle(ActionEvent event) {
                 placeShip.setSelected(true);
+                state.setSelected(PlacingState.SHIP);
             }
         });
 
@@ -327,6 +361,7 @@ public class GUI extends Application {
             @Override
             public void handle(ActionEvent event) {
                 deleteField.setSelected(true);
+                state.setSelected(state.CLEAR);
             }
         });
 
@@ -441,6 +476,8 @@ public class GUI extends Application {
     }
 
 
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         init();
@@ -452,7 +489,7 @@ public class GUI extends Application {
         createImageViews();
         createToolbar();
         buildScene();
-
+        System.out.println(state.getSelected());
         primaryStage.getIcons().add(new Image("/resources/whale/whale32.png"));
         primaryStage.setTitle("Ozean Mini-Programmierwelt");
         primaryStage.setScene(new Scene(outerBorder, 1200, 600));
@@ -463,6 +500,7 @@ public class GUI extends Application {
     public void init() throws Exception {
         super.init();
         this.ocean = new Ocean();
+        state = new PlacingState();
     }
 
     public static void main(String[] args) {
