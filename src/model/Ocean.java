@@ -58,21 +58,6 @@ public class Ocean extends Observable {
             }
         }
 
-        // Test fuer die GUI
-        setField(1,2, oceanTiles, 1);
-        setField(1,3, oceanTiles, 5);
-        setField(9,4, oceanTiles, 10);
-        setField(5,8, oceanTiles, 15);
-        placeShip(2,3);
-        // Testen der Bewegungen
-        /*this.move();
-        this.move();
-        this.turn();
-        this.turn();
-        this.turn();
-        this.move();
-        this.pickFish();
-        this.move();*/
 
     }
 
@@ -181,11 +166,11 @@ public class Ocean extends Observable {
     }
 
     // Ozean größe anpassen
-    public int[][] setOceanSize(int rows, int cols) {
+    public void setOceanSize(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
         int[][] tmp = new int[rows][cols];
-
+        // TODO: richtige Übernahme der Felder für jede Größe des Arrays implementireren
         if (tmp.length > oceanTiles.length && tmp[0].length > oceanTiles[0].length) {
             for (int i = 0; i < oceanTiles.length; i++) {
                 for (int j = 0; j < oceanTiles.length; j++) {
@@ -198,7 +183,11 @@ public class Ocean extends Observable {
                     tmp[i][j] = oceanTiles[i][j];
                 }
             }
+        } else {
+            this.oceanTiles = tmp;
         }
+
+
 
         this.oceanTiles = tmp;
 
@@ -209,10 +198,8 @@ public class Ocean extends Observable {
             this.setWhaleTopLeft();
         }
 
-
         setChanged();
         notifyObservers();
-        return oceanTiles;
 
     }
 
@@ -235,12 +222,7 @@ public class Ocean extends Observable {
         notifyObservers();
     }
 
-    // Schiff entfernen
-    public void removeShip(int row, int col) {
-        if (oceanTiles[row][col] == -1) {
-            oceanTiles[row][col] = NORMAL_FIELD;
-        }
-    }
+
 
     // Ozean Fisch setzen
     public void placeFish(int row, int col) {
@@ -276,12 +258,12 @@ public class Ocean extends Observable {
 
     // Breite des Ozeans für das OceanPanel
     public int getOceanWidth () {
-        return (getNoOfCols());
+        return this.oceanTiles[0].length;
     }
 
     // Höhe des Ozeans für das OceanPanel
     public int getOceanHeight() {
-        return (getNoOfRows());
+        return this.oceanTiles.length;
     }
 
     @Override

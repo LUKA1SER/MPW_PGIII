@@ -1,6 +1,8 @@
 package view;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,6 +16,8 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import model.Ocean;
 import model.PlacingState;
+
+import java.util.function.UnaryOperator;
 
 
 public class GUI extends Application {
@@ -122,7 +126,6 @@ public class GUI extends Application {
         op = new OceanPanel(this.ocean, this.rightPane, state);
         rightPane.setContent(op);
         return rightPane;
-
     }
 
     // Editor Menü erstellen
@@ -266,23 +269,7 @@ public class GUI extends Application {
         fieldButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Dialog<Pair<Integer, Integer>> dialog = new Dialog<>();
-                dialog.setTitle("Grösse ändern");
-
-                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-                GridPane buttonPane = new GridPane();
-                buttonPane.setHgap(10);
-                buttonPane.setVgap(10);
-                buttonPane.setPadding(new Insets(20, 150, 10, 10));
-
-                TextField height = new TextField();
-                TextField width = new TextField();
-                buttonPane.add(height, 2, 0);
-                buttonPane.add(new Label("Höhe: "), 1, 0);
-                buttonPane.add(width, 2,1);
-                buttonPane.add(new Label("Breite: "), 1, 1);
-                dialog.getDialogPane().setContent(buttonPane);
-                dialog.showAndWait();
+               createAlertField();
             }
         });
 
@@ -324,7 +311,49 @@ public class GUI extends Application {
     }
 
     private void createAlertField() {
+        // Vorlage: https://stackoverflow.com/questions/31556373/javafx-dialog-with-2-input-fields
+        Dialog<Pair<Integer, Integer>> dialog = new Dialog<>();
+        dialog.setTitle("Grösse ändern");
 
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        GridPane buttonPane = new GridPane();
+        buttonPane.setHgap(10);
+        buttonPane.setVgap(10);
+        buttonPane.setPadding(new Insets(20, 150, 10, 10));
+
+        // Nur eingabe von Zahlen erlauben nach: https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
+        TextField height = new TextField();
+        height.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    height.setText(newValue.replaceAll("[^\\d]*", ""));
+                }
+            }
+        });
+        TextField width = new TextField();
+        width.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    width.setText(newValue.replaceAll("[^\\d]*", ""));
+                }
+            }
+        });
+        buttonPane.add(height, 2, 0);
+        buttonPane.add(new Label("Höhe: "), 1, 0);
+        buttonPane.add(width, 2,1);
+        buttonPane.add(new Label("Breite: "), 1, 1);
+        dialog.getDialogPane().setContent(buttonPane);
+        dialog.showAndWait();
+
+
+        String newStringWidth = width.getText();
+        String newStringHeigth = height.getText();
+
+        int newHeigth = Integer.parseInt(newStringHeigth);
+        int newWidth = Integer.parseInt(newStringWidth);
+        ocean.setOceanSize(newWidth, newHeigth);
     }
 
     public void setToggleGroups() {
@@ -354,7 +383,7 @@ public class GUI extends Application {
             public void handle(ActionEvent event) {
                 placeShip.setSelected(true);
                 state.setSelected(PlacingState.SHIP);
-            }
+                }
         });
 
         removeButton.setOnAction(new EventHandler<ActionEvent>() {

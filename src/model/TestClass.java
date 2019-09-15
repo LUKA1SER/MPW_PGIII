@@ -47,9 +47,9 @@ public class TestClass {
                             break;
                 case 'h': ocean.getWhale().putFish();
                             break;
-                case 'k': oceanArray = ocean.setOceanSize(3,3);
+                case 'k': ocean.setOceanSize(3,3);
                             break;
-                case 'g': oceanArray = ocean.setOceanSize(10, 10);
+                case 'g': ocean.setOceanSize(10, 10);
                             break;
 
                 case 'm': if (ocean.isMouthEmpty()) {

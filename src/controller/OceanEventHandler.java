@@ -54,7 +54,11 @@ public class OceanEventHandler implements EventHandler<MouseEvent> {
     private void mouseDragged(MouseEvent o) {
         Ocean.Tile tile = oceanPanel.getTile(o.getX(), o.getY());
         if (state.getSelected() == WHALE) {
+            if (tile.getCol() > ocean.getNoOfCols() || tile.getRow() > ocean.getNoOfRows()) {
+                return;
+            }
             ocean.placeWhale(tile.getCol(), tile.getRow());
+
         } else {
             return;
         }

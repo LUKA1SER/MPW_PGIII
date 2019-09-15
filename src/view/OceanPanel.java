@@ -47,7 +47,6 @@ public class OceanPanel extends Region implements Observer {
         loadWhaleImages();
         loadFishImages();
         paintOcean();
-
         state.addObserver(this);
 
         OceanEventHandler oeh = new OceanEventHandler(this.ocean, this, this.state);
@@ -58,7 +57,6 @@ public class OceanPanel extends Region implements Observer {
 
     // zeichnen des Feldes
     public void paintOcean() {
-        // TODO: Breite und Hoehe auf +2 * this.CELLSIZE ändern
         canvas = new Canvas((this.getFieldWidth() + 200), (this.getFieldHeight() + 200));
         this.setPrefSize(this.getFieldWidth(), this.getFieldHeight());
         gc = canvas.getGraphicsContext2D();
@@ -104,6 +102,7 @@ public class OceanPanel extends Region implements Observer {
             }
         }
     }
+
 
     // Feld berechnen, auf das geklickt wurde
     public Ocean.Tile getTile (double xValue, double yValue) {
@@ -181,6 +180,7 @@ public class OceanPanel extends Region implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        gc.clearRect(0,0, this.canvas.getWidth(), this.canvas.getHeight());
         this.paintOcean();
     }
 }
